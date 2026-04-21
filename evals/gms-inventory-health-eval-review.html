@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMS Inventory Health Analyzer — Eval Review</title>
+<style>
+  :root {
+    --forest: #1B4D3E;
+    --gold: #C8A96E;
+    --bg: #FAF8F5;
+    --card: #FFFFFF;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --pass: #059669;
+    --fail: #dc2626;
+    --critical: #7c3aed;
+    --border: #e5e7eb;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .header { background: var(--forest); color: white; padding: 2rem 2rem 1.5rem; }
+  .header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .header p { color: var(--gold); font-size: 0.95rem; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  .scorecard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+  .score-box { background: var(--card); border-radius: 12px; padding: 1.5rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+  .score-box .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.5rem; }
+  .score-box .value { font-size: 2.5rem; font-weight: 800; }
+  .score-box.with .value { color: var(--pass); }
+  .score-box.without .value { color: var(--fail); }
+  .score-box.delta .value { color: var(--forest); }
+  .score-box .sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+  .eval-section { margin-bottom: 2.5rem; }
+  .eval-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--forest); }
+  .eval-header h2 { font-size: 1.2rem; color: var(--forest); }
+  .eval-scores { display: flex; gap: 1rem; font-size: 0.9rem; font-weight: 600; }
+  .eval-scores .with-score { color: var(--pass); }
+  .eval-scores .without-score { color: var(--fail); }
+  .prompt-box { background: #f3f4f6; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 0.9rem; border-left: 4px solid var(--gold); }
+  .prompt-box strong { color: var(--forest); }
+  .comparison-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .comparison-table th { background: var(--forest); color: white; padding: 0.75rem 1rem; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .comparison-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: top; }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+  .badge.pass { background: #d1fae5; color: var(--pass); }
+  .badge.fail { background: #fee2e2; color: var(--fail); }
+  .badge.critical { background: #ede9fe; color: var(--critical); font-size: 0.65rem; margin-left: 0.35rem; }
+  .evidence { color: var(--muted); font-size: 0.8rem; margin-top: 0.35rem; line-height: 1.4; }
+  .note-box { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 2rem; font-size: 0.9rem; }
+  .note-box strong { color: #92400e; }
+  .footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="max-width:1100px;margin:0 auto;">
+    <h1>GMS Inventory Health Analyzer — Eval Review</h1>
+    <p>Skill 6 of 6 &bull; Iteration 1 &bull; 2026-03-28 &bull; 20 assertions across 3 evals</p>
+  </div>
+</div>
+<div class="container">
+
+<div class="scorecard">
+  <div class="score-box with">
+    <div class="label">With Skill</div>
+    <div class="value">90%</div>
+    <div class="sub">18 / 20 assertions passed</div>
+  </div>
+  <div class="score-box without">
+    <div class="label">Without Skill (Baseline)</div>
+    <div class="value">15%</div>
+    <div class="sub">3 / 20 assertions passed</div>
+  </div>
+  <div class="score-box delta">
+    <div class="label">Delta</div>
+    <div class="value">+75%</div>
+    <div class="sub">15 additional assertions passed</div>
+  </div>
+</div>
+
+<div class="note-box">
+  <strong>Note:</strong> The with-skill agent missed 2 assertions in Eval 1 — mislabeling MEDIUM severity as HIGH (threshold mapping error) and not explicitly classifying velocity tier. These are minor presentation issues; the underlying math was correct. Eval 2 and Eval 3 scored 100%.
+</div>
+
+<!-- Eval 1 -->
+<div class="eval-section">
+  <div class="eval-header">
+    <h2>Eval 1: Reorder Recommendation Analysis</h2>
+    <div class="eval-scores">
+      <span class="with-score">With: 5/7</span>
+      <span class="without-score">Without: 1/7</span>
+    </div>
+  </div>
+  <div class="prompt-box">
+    <strong>Prompt:</strong> A product has 15 units in stock. Over the last 90 days it sold 270 units (3 units/day average). The 30-day velocity is 4 units/day, 60-day is 3.5 units/day, 90-day is 3 units/day. Lead time from the supplier is 14 days. Walk me through the reorder analysis.
+  </div>
+  <table class="comparison-table">
+    <thead><tr><th style="width:30%">Assertion</th><th style="width:5%">Type</th><th style="width:32%">With Skill</th><th style="width:33%">Without Skill</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Weighted velocity: (4x0.5)+(3.5x0.3)+(3x0.2) = 3.65<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">Exact: 2.0 + 1.05 + 0.6 = 3.65 units/day</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Wrong weights (40/35/25), gets 3.575</div></td>
+      </tr>
+      <tr>
+        <td>Reorder point: 3.65 x (14+7) = ~77 units<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">3.65 x 21 = 76.65 ~ 77 units</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Gets 126.4 using safety factor 1.5x multiplier</div></td>
+      </tr>
+      <tr>
+        <td>Days on hand: 15 / 3.65 ~ 4.1 days<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">15 / 3.65 = 4.11 days</div></td>
+        <td><span class="badge pass">PASS</span><div class="evidence">15 / 3.6 = 4.2 days (close with rounding)</div></td>
+      </tr>
+      <tr>
+        <td>Alert severity: MEDIUM (15 < 38.5 but > 7.7)</td>
+        <td><span class="badge fail">FAIL</span></td>
+        <td><div class="evidence">Correctly checks 15 < 38.5 but labels it HIGH instead of MEDIUM</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Says CRITICAL — massively overclassified</div></td>
+      </tr>
+      <tr>
+        <td>Order qty: max(154, 219) - 15 = 204 units</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">max(77x2, 3.65x30x2) - 15 = 204 units exact</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Gets 234 using ad-hoc formula</div></td>
+      </tr>
+      <tr>
+        <td>Uses 7-day safety stock buffer</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"Default safety stock: 7 days" — 3.65 x 7 = 25.55 units</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Uses "safety factor 1.5" not 7-day buffer</div></td>
+      </tr>
+      <tr>
+        <td>Classifies velocity as 'Normal' (1-5 units/day)</td>
+        <td><span class="badge fail">FAIL</span></td>
+        <td><div class="evidence">Doesn't use velocity tier classification. Says "Accelerating" but not Fast/Normal/Slow/Dead</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">No velocity classification system used</div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Eval 2 -->
+<div class="eval-section">
+  <div class="eval-header">
+    <h2>Eval 2: Dead Stock Identification & Action Plan</h2>
+    <div class="eval-scores">
+      <span class="with-score">With: 7/7</span>
+      <span class="without-score">Without: 1/7</span>
+    </div>
+  </div>
+  <div class="prompt-box">
+    <strong>Prompt:</strong> Explain how to identify dead stock at GMS. We have about 25,000 active products. What's the definition, how do I find it, what metrics should I look at, and what should I do with it? Give me the full framework including the action matrix.
+  </div>
+  <table class="comparison-table">
+    <thead><tr><th style="width:30%">Assertion</th><th style="width:5%">Type</th><th style="width:32%">With Skill</th><th style="width:33%">Without Skill</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Dead stock: stock > 0, zero sales in 180 days, not discontinued<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">Exact 3-part definition with field names (decUnitsInStock, ysnDiscontinued)</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Uses "12+ months" not 180 days, no ysnDiscontinued</div></td>
+      </tr>
+      <tr>
+        <td>Filter ysnDiscontinued to exclude 46,606 discontinued<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"Start with 25,283 active products (filter ysnDiscontinued = False)"</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Never mentions ysnDiscontinued or product count split</div></td>
+      </tr>
+      <tr>
+        <td>Action matrix: >$5K/$500-$5K/<$500 x 180-365d/>365d</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">Full matrix with all 6 cells and specific actions per cell</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Has matrix but wrong tiers (>$500/<$500 and month-based)</div></td>
+      </tr>
+      <tr>
+        <td>Value at Risk = Dead Stock Qty x curCost</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"Value at Risk = Dead Stock Quantity x Current Cost"</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Uses carrying cost calc, not "Value at Risk" concept</div></td>
+      </tr>
+      <tr>
+        <td>Cut-to-order warning — check parent COIL</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"Low panel inventory is often normal. Check the parent COIL."</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Vague mention of panel niche, no coil-checking guidance</div></td>
+      </tr>
+      <tr>
+        <td>Paradigm ERP source of truth, API down since 2026-03-14</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"Paradigm API is currently down (as of 2026-03-14)"</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Mentions Paradigm but doesn't know API status</div></td>
+      </tr>
+      <tr>
+        <td>Does NOT recommend /api/user/Inventory/Adjust<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">Uses Physical Count Worksheets and IADJ 2-step only</div></td>
+        <td><span class="badge pass">PASS</span><div class="evidence">Doesn't mention the forbidden endpoint</div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Eval 3 -->
+<div class="eval-section">
+  <div class="eval-header">
+    <h2>Eval 3: Portfolio Health Score Calculation</h2>
+    <div class="eval-scores">
+      <span class="with-score">With: 6/6</span>
+      <span class="without-score">Without: 1/6</span>
+    </div>
+  </div>
+  <div class="prompt-box">
+    <strong>Prompt:</strong> Explain the health score system. How is the 0-100 score calculated? Walk through scoring a product with 200 units, RP of 150, 8 units/day steady, $12/unit cost, 25 days at current levels.
+  </div>
+  <table class="comparison-table">
+    <thead><tr><th style="width:30%">Assertion</th><th style="width:5%">Type</th><th style="width:32%">With Skill</th><th style="width:33%">Without Skill</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>All 5 factors with correct weights<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">Stock Level 30%, Velocity 25%, VAR 20%, DOH 15%, Consistency 10%</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Wrong names and weights (20-25% ranges, guessed factors)</div></td>
+      </tr>
+      <tr>
+        <td>Stock Level = HEALTHY (100) since 200 > 150<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"HEALTHY (100 pts): At or above reorder point" → 30 points</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">"200/150 = 1.33x = ~80-85/100" — wrong scoring method</div></td>
+      </tr>
+      <tr>
+        <td>Velocity = 'Fast Mover' (>5 units/day)</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"8 units/day falls in the Fast Mover category (> 5 units/day)"</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">"8 units/day is healthy" — no tier system</div></td>
+      </tr>
+      <tr>
+        <td>DOH: 200/8 = 25 days, within target range</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"DOH = 200 / 8 = 25 days" referencing 14-30 day target</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Says "25-day supply" but no DOH calc or benchmarks</div></td>
+      </tr>
+      <tr>
+        <td>Status tiers: EXCELLENT/GOOD/FAIR/POOR/CRITICAL</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">All 5 tiers with exact score ranges (80-100, 60-79, etc.)</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Just says "77/100 Healthy" — no tier system</div></td>
+      </tr>
+      <tr>
+        <td>Product identified as healthy fast mover</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">Score 100/100 EXCELLENT — "optimal health, well-stocked fast mover"</div></td>
+        <td><span class="badge pass">PASS</span><div class="evidence">"~77/100 Healthy" — directionally correct</div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<div class="footer">
+  GMS Inventory Health Analyzer &bull; Skill 6 of 6 &bull; Built with skill-creator &bull; Greenfield Metal Sales &bull; 2026
+</div>
+</body>
+</html>

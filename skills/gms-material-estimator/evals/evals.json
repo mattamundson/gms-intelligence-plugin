@@ -1,0 +1,47 @@
+{
+  "skill_name": "gms-material-estimator",
+  "evals": [
+    {
+      "id": "eval-1-quick-pole-barn",
+      "name": "Quick Estimate: Pole Barn",
+      "prompt": "I need a quick material estimate for a pole barn. 40 feet wide, 60 feet long, 14-foot eave height, 4:12 roof pitch. Classic Rib 29ga in Arctic White. Full metal walls on all sides. One 12x14 overhead door and one 3x7 walk door. Give me panel counts, trim, and fasteners.",
+      "assertions": [
+        {"text": "Correctly calculates roof area using 4:12 pitch multiplier (~1.05) applied to building footprint", "type": "critical-correctness"},
+        {"text": "Panel count uses 36\" (3') coverage width for Classic Rib, rounds UP", "type": "critical-correctness"},
+        {"text": "Includes ridge cap, eave trim, rake trim, drip edge, corner trim, and J-channel", "type": "correctness"},
+        {"text": "Subtracts door openings from wall panel counts", "type": "correctness"},
+        {"text": "Includes 5% waste on panels and 10% waste on trim", "type": "critical-correctness"},
+        {"text": "Fastener count uses ~80 screws per 100 sq ft for roof, rounds to full boxes of 250", "type": "correctness"},
+        {"text": "Lists all assumptions explicitly (overhang, pitch, waste factor, etc.)", "type": "correctness"},
+        {"text": "Does NOT include installation labor or framing (supply only)", "type": "critical-correctness"}
+      ]
+    },
+    {
+      "id": "eval-2-detailed-residential",
+      "name": "Detailed Estimate: Residential Re-Roof",
+      "prompt": "I need a detailed material takeoff for a residential re-roof. The house is 30 feet wide by 50 feet long, 6:12 gable roof pitch, 12-inch overhangs on all sides. The homeowner wants SSQ550 standing seam in 26ga Kynar Slate Gray. There are 3 plumbing vent penetrations. No valleys. Include complete BOM with product codes.",
+      "assertions": [
+        {"text": "Uses SSQ550 coverage width (16\" not 36\") for panel count — this is a standing seam panel", "type": "critical-correctness"},
+        {"text": "Applies 6:12 pitch multiplier (~1.12) to calculate actual roof area", "type": "critical-correctness"},
+        {"text": "Calculates rafter length including 12\" overhang using Pythagorean theorem", "type": "correctness"},
+        {"text": "Includes 3 pipe boots for the plumbing vents", "type": "correctness"},
+        {"text": "Product codes use CMG color format for Kynar (CMGSG for Slate Gray)", "type": "correctness"},
+        {"text": "Includes standing seam clips instead of exposed fastener screws", "type": "correctness"},
+        {"text": "Mentions this is supply-only — homeowner needs to hire installer", "type": "correctness"}
+      ]
+    },
+    {
+      "id": "eval-3-mode-comparison",
+      "name": "Quick vs Detailed Mode Awareness",
+      "prompt": "A contractor calls and says 'I need to know roughly how much metal I need for a 30x40 garage with a 4:12 pitch. Classic Rib, 29ga, Charcoal. Full walls, one 16x8 overhead door.' Give me a quick estimate, then tell me what additional information you'd need for a detailed engineering-grade takeoff.",
+      "assertions": [
+        {"text": "Provides quick estimate FIRST (not a bunch of questions), respecting the 'roughly' request", "type": "critical-correctness"},
+        {"text": "Quick estimate includes approximate panel counts, basic trim list, and fastener boxes", "type": "correctness"},
+        {"text": "Then lists specific questions for detailed mode: exact pitch, overhang, windows, penetrations, wainscot, soffit/fascia needs", "type": "correctness"},
+        {"text": "Uses correct panel coverage (36\" for Classic Rib)", "type": "critical-correctness"},
+        {"text": "Subtracts 16x8 door opening from wall panels", "type": "correctness"},
+        {"text": "Includes waste factors in the quick estimate", "type": "correctness"}
+      ]
+    }
+  ]
+}

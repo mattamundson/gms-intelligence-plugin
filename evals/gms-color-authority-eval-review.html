@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMS Color & Finish Authority — Eval Review</title>
+<style>
+  :root { --forest: #1B4D3E; --gold: #C8A96E; --bg: #FAF8F5; --card: #FFF; --text: #1a1a1a; --muted: #6b7280; --pass: #059669; --fail: #dc2626; --critical: #7c3aed; --border: #e5e7eb; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .header { background: var(--forest); color: white; padding: 2rem; }
+  .header h1 { font-size: 1.75rem; font-weight: 700; max-width: 1100px; margin: 0 auto 0.25rem; }
+  .header p { color: var(--gold); font-size: 0.95rem; max-width: 1100px; margin: 0 auto; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  .scorecard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+  .score-box { background: var(--card); border-radius: 12px; padding: 1.5rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+  .score-box .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.5rem; }
+  .score-box .value { font-size: 2.5rem; font-weight: 800; }
+  .score-box.with .value { color: var(--pass); }
+  .score-box.without .value { color: var(--fail); }
+  .score-box.delta .value { color: var(--forest); }
+  .score-box .sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+  .eval-section { margin-bottom: 2.5rem; }
+  .eval-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--forest); }
+  .eval-header h2 { font-size: 1.15rem; color: var(--forest); }
+  .eval-scores { display: flex; gap: 1rem; font-size: 0.9rem; font-weight: 600; }
+  .ws { color: var(--pass); } .wos { color: var(--fail); }
+  .prompt-box { background: #f3f4f6; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 0.9rem; border-left: 4px solid var(--gold); }
+  .prompt-box strong { color: var(--forest); }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  th { background: var(--forest); color: white; padding: 0.75rem 1rem; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+  .badge.pass { background: #d1fae5; color: var(--pass); }
+  .badge.fail { background: #fee2e2; color: var(--fail); }
+  .badge.critical { background: #ede9fe; color: var(--critical); font-size: 0.65rem; margin-left: 0.35rem; }
+  .ev { color: var(--muted); font-size: 0.8rem; margin-top: 0.35rem; line-height: 1.4; }
+  .footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="header"><h1>GMS Color & Finish Authority — Eval Review</h1><p>Skill 11 of 11 &bull; Iteration 1 &bull; 2026-03-29 &bull; 21 assertions across 3 evals</p></div>
+<div class="container">
+<div class="scorecard">
+  <div class="score-box with"><div class="label">With Skill</div><div class="value">100%</div><div class="sub">21 / 21 assertions passed</div></div>
+  <div class="score-box without"><div class="label">Baseline</div><div class="value">14%</div><div class="sub">3 / 21 assertions passed</div></div>
+  <div class="score-box delta"><div class="label">Delta</div><div class="value">+86%</div><div class="sub">18 additional assertions passed</div></div>
+</div>
+
+<div class="eval-section">
+  <div class="eval-header"><h2>Eval 1: Contractor Color Request Routing</h2><div class="eval-scores"><span class="ws">With: 7/7</span><span class="wos">Without: 0/7</span></div></div>
+  <div class="prompt-box"><strong>Prompt:</strong> Contractor says: "I need 200 LF of Classic Rib in that dark gray crinkle, 29 gauge. And 100 LF of SSQ675 standing seam in charcoal gray — the good paint, not the cheap stuff." Route to suppliers, identify colors/codes, flag premium pricing, note availability.</div>
+  <table><thead><tr><th style="width:28%">Assertion</th><th style="width:5%">W</th><th style="width:33%">With Skill</th><th style="width:34%">Without Skill</th></tr></thead><tbody>
+    <tr><td>Dark gray crinkle = Crinkle Charcoal Gray (CCH), USS/SMP<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"Charcoal Gray Crinkle, Color code: CCH, Paint system: SMP, Supplier: USS"</div></td><td><span class="badge fail">F</span><div class="ev">"I don't have the exact code or naming convention"</div></td></tr>
+    <tr><td>29ga crinkle stock at 40.875" width from USS</td><td><span class="badge pass">P</span></td><td><div class="ev">"29ga @ 40.875" width, Availability: Stock"</div></td><td><span class="badge fail">F</span><div class="ev">No width or stock data provided</div></td></tr>
+    <tr><td>Crinkle carries +15% premium markup on entire product price<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"+15% to entire product (crinkle texture)"</div></td><td><span class="badge fail">F</span><div class="ev">Guessed "+15% likely" but framed as uncertainty</div></td></tr>
+    <tr><td>Coil-level crinkle surcharge: +$0.18/LF on 29ga</td><td><span class="badge pass">P</span></td><td><div class="ev">"+$0.18 per LF (Textured/Crinkle at 29ga 40.875")"</div></td><td><span class="badge fail">F</span><div class="ev">No coil surcharge data</div></td></tr>
+    <tr><td>SSQ675 "good paint" = Kynar/PVDF routed to CMG<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"Good paint = Kynar (CMG)... Kynar 500 PVDF, Supplier: CMG"</div></td><td><span class="badge fail">F</span><div class="ev">Posed as question, did not answer: "Kynar or SMP?"</div></td></tr>
+    <tr><td>Kynar Charcoal Gray stock in CMG catalog, both widths</td><td><span class="badge pass">P</span></td><td><div class="ev">"Stock in both 40" and 48" widths (all Kynar colors 100% stock)"</div></td><td><span class="badge fail">F</span><div class="ev">No catalog or availability specifics</div></td></tr>
+    <tr><td>Kynar 4-6 weeks vs SMP 2-3 weeks</td><td><span class="badge pass">P</span></td><td><div class="ev">"4-6 weeks standard" (Kynar) vs "2-3 weeks standard" (SMP)</div></td><td><span class="badge fail">F</span><div class="ev">Mentioned "4-6 week lead times" generically, no supplier pairing</div></td></tr>
+  </tbody></table>
+</div>
+
+<div class="eval-section">
+  <div class="eval-header"><h2>Eval 2: Premium Finish Cost Calculation</h2><div class="eval-scores"><span class="ws">With: 7/7</span><span class="wos">Without: 0/7</span></div></div>
+  <div class="prompt-box"><strong>Prompt:</strong> Quote comparison: 100 LF Eave Trim in 26ga standard Black (BK) vs Matte Black (MBK) vs Crinkle Black (CBK). Walk through coil-level cost differences, premium finish markup, and clarify Matte Black the color vs MCC the finish type.</div>
+  <table><thead><tr><th style="width:28%">Assertion</th><th style="width:5%">W</th><th style="width:33%">With Skill</th><th style="width:34%">Without Skill</th></tr></thead><tbody>
+    <tr><td>Standard Black (BK) = no surcharge, no premium — base pricing<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"Finish Surcharge: +$0.00, Premium Markup: None (1.0x)"</div></td><td><span class="badge fail">F</span><div class="ev">Refused: "I cannot provide a reliable quote comparison"</div></td></tr>
+    <tr><td>Matte Black (MBK) = premium +15% on entire product<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"+15% premium markup on the ENTIRE PRODUCT PRICE"</div></td><td><span class="badge fail">F</span><div class="ev">Refused to provide specifics</div></td></tr>
+    <tr><td>Crinkle Black (CBK) = crinkle premium +15%<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"+15% on FULL PRODUCT PRICE"</div></td><td><span class="badge fail">F</span><div class="ev">Refused to provide specifics</div></td></tr>
+    <tr><td>Crinkle coil surcharge on 26ga = +$0.23/LF</td><td><span class="badge pass">P</span></td><td><div class="ev">"per-linear-foot coil surcharge of +$0.23 in 26ga"</div></td><td><span class="badge fail">F</span><div class="ev">No surcharge data</div></td></tr>
+    <tr><td>MBK is specific color vs MCC is finish type for multiple colors<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">Full table: "MBK is a specific color. MCC is a finish type that can apply to multiple colors."</div></td><td><span class="badge fail">F</span><div class="ev">"Requires knowing specific offerings" — could not explain</div></td></tr>
+    <tr><td>All three USS/SMP supplier, 26ga = 43" width</td><td><span class="badge pass">P</span></td><td><div class="ev">"All three are USS SMP colors. 26ga SMP coils are 43" wide from USS."</div></td><td><span class="badge fail">F</span><div class="ev">No supplier routing or coil width</div></td></tr>
+    <tr><td>BK and MBK stock in 26ga; CBK may be PTO</td><td><span class="badge pass">P</span></td><td><div class="ev">"BK: Stock, MBK: Stock, CBK: Possibly PTO — 6-8 weeks if so"</div></td><td><span class="badge fail">F</span><div class="ev">No availability data</div></td></tr>
+  </tbody></table>
+</div>
+
+<div class="eval-section">
+  <div class="eval-header"><h2>Eval 3: SMP vs Kynar Same-Name Color Resolution</h2><div class="eval-scores"><span class="ws">With: 7/7</span><span class="wos">Without: 3/7</span></div></div>
+  <div class="prompt-box"><strong>Prompt:</strong> Customer needs Burnished Slate panels and trim for a commercial building. Architect wants 40-year paint warranty. Also quote Ash Gray as alternative. What options exist and what's the cost difference between regular and premium?</div>
+  <table><thead><tr><th style="width:28%">Assertion</th><th style="width:5%">W</th><th style="width:33%">With Skill</th><th style="width:34%">Without Skill</th></tr></thead><tbody>
+    <tr><td>40-year warranty = Kynar/PVDF from CMG, not SMP<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"Your architect's 40-year requirement locks you into Kynar 500, CMG supplier"</div></td><td><span class="badge pass">P</span><div class="ev">"For 40-year, you'd need Kynar on 24/26ga coil (CMG supplier)"</div></td></tr>
+    <tr><td>Burnished Slate in BOTH SMP and Kynar — cross-system warning<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"Same name as SMP version (USS), but different supplier, cost, lead time"</div></td><td><span class="badge pass">P</span><div class="ev">"Color variations between suppliers (USS/CMG), mixing causes shade mismatches"</div></td></tr>
+    <tr><td>Ash Gray also in BOTH systems — same warning<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"Both exist in SMP (USS) and Kynar (CMG)"</div></td><td><span class="badge fail">F</span><div class="ev">"Similarly available in Kynar" — no cross-system confusion warning</div></td></tr>
+    <tr><td>Kynar base cost ~65-69% higher than SMP</td><td><span class="badge pass">P</span></td><td><div class="ev">"~65-69% more than SMP equivalents"</div></td><td><span class="badge fail">F</span><div class="ev">Said "~15% markup" — completely wrong (actual 65-69%)</div></td></tr>
+    <tr><td>Kynar = 24ga or 26ga only (no 29ga)</td><td><span class="badge pass">P</span></td><td><div class="ev">"24ga or 26ga, both widths stock"</div></td><td><span class="badge pass">P</span><div class="ev">"24-gauge, 26-gauge, Both support Kynar"</div></td></tr>
+    <tr><td>Kynar 4-6 weeks vs SMP 2-3 weeks</td><td><span class="badge pass">P</span></td><td><div class="ev">"4-6 weeks standard vs 2-3 weeks standard"</div></td><td><span class="badge fail">F</span><div class="ev">Said "3-4 weeks" Kynar, "1-2 weeks" SMP — both wrong</div></td></tr>
+    <tr><td>Recommends confirming Kynar for architect spec</td><td><span class="badge pass">P</span></td><td><div class="ev">"Your architect's 40-year requirement locks you into Kynar 500"</div></td><td><span class="badge fail">F</span><div class="ev">Suggested SMP as alternative without clearly stating only Kynar meets spec</div></td></tr>
+  </tbody></table>
+</div>
+</div>
+<div class="footer">GMS Color & Finish Authority &bull; Skill 11 of 11 &bull; Greenfield Metal Sales &bull; 2026</div>
+</body>
+</html>

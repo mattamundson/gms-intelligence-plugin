@@ -1,0 +1,46 @@
+{
+  "skill_name": "gms-inventory-health",
+  "evals": [
+    {
+      "id": "eval-1-reorder-analysis",
+      "name": "Reorder Recommendation Analysis",
+      "prompt": "A product has 15 units in stock. Over the last 90 days it sold 270 units (3 units/day average). The 30-day velocity is 4 units/day, 60-day is 3.5 units/day, 90-day is 3 units/day. Lead time from the supplier is 14 days. Walk me through the reorder analysis — what's the weighted velocity, reorder point, safety stock, days on hand, recommended order quantity, and alert severity?",
+      "assertions": [
+        {"text": "Calculates weighted velocity correctly: (4×0.5) + (3.5×0.3) + (3×0.2) = 3.65 units/day", "type": "critical-correctness"},
+        {"text": "Calculates reorder point using velocity × (lead_time + safety_stock): 3.65 × (14 + 7) = 76.65, rounds to ~77 units", "type": "critical-correctness"},
+        {"text": "Calculates days on hand: 15 ÷ 3.65 ≈ 4.1 days", "type": "critical-correctness"},
+        {"text": "Identifies alert severity as HIGH (stock < reorder point × 0.10 = 7.7, and 15 > 7.7 but < 38.3 which is ×0.50) — actually MEDIUM severity since 15 < 77×0.50=38.5 but > 77×0.10=7.7", "type": "correctness"},
+        {"text": "Calculates recommended order quantity: max(77×2, 3.65×30×2) - 15 = max(154, 219) - 15 = 204 units", "type": "correctness"},
+        {"text": "Uses 7-day safety stock buffer in the reorder point calculation", "type": "correctness"},
+        {"text": "Classifies the product as a 'Normal' velocity item (1-5 units/day)", "type": "correctness"}
+      ]
+    },
+    {
+      "id": "eval-2-dead-stock-audit",
+      "name": "Dead Stock Identification and Action Plan",
+      "prompt": "I need you to explain how to identify dead stock at GMS. We have about 25,000 active products. What's the definition of dead stock, how do I find it in our system, what metrics should I look at, and what should I do with it? Give me the full framework including the action matrix based on value and age.",
+      "assertions": [
+        {"text": "Defines dead stock correctly: units in stock > 0, zero sales in 180 days, product not discontinued (ysnDiscontinued = False)", "type": "critical-correctness"},
+        {"text": "Mentions filtering by ysnDiscontinued to exclude the 46,606 discontinued products from dead stock analysis", "type": "critical-correctness"},
+        {"text": "Includes the action matrix with value tiers (>$5K, $500-$5K, <$500) and age tiers (180-365 days, >365 days)", "type": "correctness"},
+        {"text": "Mentions Value at Risk calculation: Dead Stock Quantity × curCost", "type": "correctness"},
+        {"text": "Warns about cut-to-order dynamics — low panel inventory is normal, check the parent COIL instead", "type": "correctness"},
+        {"text": "References Paradigm ERP as source of truth and mentions the API is currently down (since 2026-03-14)", "type": "correctness"},
+        {"text": "Does NOT recommend using /api/user/Inventory/Adjust (returns 405) for any corrections", "type": "critical-correctness"}
+      ]
+    },
+    {
+      "id": "eval-3-health-score-calculation",
+      "name": "Portfolio Health Score Calculation",
+      "prompt": "Explain the inventory health score system for GMS. How is the 0-100 score calculated? What are the 5 weighted factors? Walk me through scoring a product that has: 200 units in stock, reorder point of 150, sells 8 units/day with steady demand, cost of $12/unit, and has been in stock for 25 days at current levels. What's its health score and status?",
+      "assertions": [
+        {"text": "Lists all 5 weighted factors: Stock Level (30%), Velocity (25%), Value at Risk (20%), Days on Hand (15%), Demand Consistency (10%)", "type": "critical-correctness"},
+        {"text": "Stock Level sub-score is HEALTHY (100) since 200 > reorder point of 150 — contributes 30 points", "type": "critical-correctness"},
+        {"text": "Velocity classification is 'Fast Mover' (>5 units/day at 8/day) — high velocity score", "type": "correctness"},
+        {"text": "Days on Hand calculation: 200 ÷ 8 = 25 days — within target range for fast-moving panels", "type": "correctness"},
+        {"text": "Final score maps to a status: EXCELLENT (80-100), GOOD (60-79), FAIR (40-59), POOR (20-39), CRITICAL (0-19)", "type": "correctness"},
+        {"text": "Mentions this product is healthy — well-stocked fast mover with steady demand and reasonable DOH", "type": "correctness"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "skill_name": "gms-supplier-intel",
+  "evals": [
+    {
+      "id": "eval-1-supplier-routing",
+      "name": "Supplier Routing Decision for 26ga Order",
+      "prompt": "A commercial contractor needs 26 gauge standing seam panels (SSQ550) in Dark Bronze for an architectural project. The architect's spec requires a 40-year paint warranty. Which supplier do we order coil from, what's the base coil cost per linear foot, and what's the expected lead time? Also, what would change if they dropped the warranty requirement and just wanted the cheapest 26ga option?",
+      "assertions": [
+        {"text": "Routes to CMG for the Kynar/PVDF 40-year warranty requirement — USS SMP cannot meet a 40-year warranty spec", "type": "critical-correctness"},
+        {"text": "CMG 26ga Kynar base cost: $4.37/LF for 43\" width coil", "type": "critical-correctness"},
+        {"text": "CMG lead time: 4-6 weeks (NOT 2-3 weeks)", "type": "critical-correctness"},
+        {"text": "If warranty dropped, routes to USS SMP 26ga at $2.59-2.65/LF — 40% cheaper", "type": "correctness"},
+        {"text": "USS lead time: 2-3 weeks — saves 2-3 weeks over CMG", "type": "correctness"},
+        {"text": "Notes that SSQ550 is standing seam (16\" coverage, concealed clips) and available in both paint systems", "type": "correctness"},
+        {"text": "Explains the cost delta: CMG 26ga is 65-69% more expensive than USS 26ga for the same gauge", "type": "correctness"}
+      ]
+    },
+    {
+      "id": "eval-2-reorder-calculation",
+      "name": "Reorder Point and PO Recommendation",
+      "prompt": "We're running low on CO4129ARW (29ga Arctic White, 41\" coil). Current stock: 45 LF. Our 30-day velocity is 8.2 LF/day, 60-day velocity is 6.5 LF/day, 90-day velocity is 5.8 LF/day. Calculate the reorder point, determine urgency, and generate a purchase recommendation with order quantity.",
+      "assertions": [
+        {"text": "Routes to USS (29ga is USS-only, cannot order from CMG)", "type": "critical-correctness"},
+        {"text": "Uses weighted velocity: (8.2×0.5)+(6.5×0.3)+(5.8×0.2) = 4.1+1.95+1.16 = 7.21 LF/day", "type": "critical-correctness"},
+        {"text": "USS lead time: 14-21 days + 7 days safety = 21-28 days", "type": "critical-correctness"},
+        {"text": "Reorder point: 7.21 × 21 to 7.21 × 28 = 151-202 LF range", "type": "correctness"},
+        {"text": "Current stock 45 LF is well below reorder point — urgency is HIGH or CRITICAL", "type": "correctness"},
+        {"text": "Order quantity uses formula: max(reorder_point×2, monthly_usage×2) - current_stock", "type": "correctness"},
+        {"text": "Base coil cost: $2.17/LF for 29ga 40.875\" width", "type": "correctness"}
+      ]
+    },
+    {
+      "id": "eval-3-cost-comparison",
+      "name": "Supplier Cost Analysis for Customer Quote",
+      "prompt": "A customer wants a quote for 500 LF of 26 gauge coil in Charcoal Gray. They haven't specified a paint system. Compare the USS SMP option vs the CMG Kynar option — show the cost per LF including any finish premiums, the total cost difference, and the lead time difference. What questions should I ask the customer to help them decide?",
+      "assertions": [
+        {"text": "USS SMP 26ga: base $2.59-2.65/LF (depending on width) with minimal or no finish premium for Charcoal Gray", "type": "critical-correctness"},
+        {"text": "CMG Kynar 26ga: base $4.37/LF for 43\" width, potentially with Regal/metallic premium", "type": "critical-correctness"},
+        {"text": "Total cost difference for 500 LF: roughly $860-900 more for CMG Kynar vs USS SMP", "type": "correctness"},
+        {"text": "Lead time: USS 2-3 weeks vs CMG 4-6 weeks", "type": "correctness"},
+        {"text": "Warranty difference: USS = Lifetime Paint & Fade, CMG = 40-Year Paint & Fade", "type": "correctness"},
+        {"text": "Questions to ask: application type (residential vs commercial), architect spec requirements, warranty needs, timeline urgency", "type": "correctness"},
+        {"text": "Notes that 26ga is the crossover gauge — only gauge available from BOTH suppliers", "type": "correctness"}
+      ]
+    }
+  ]
+}

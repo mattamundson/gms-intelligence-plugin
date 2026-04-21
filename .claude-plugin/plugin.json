@@ -1,0 +1,20 @@
+{
+  "name": "gms-intelligence",
+  "version": "1.0.0",
+  "description": "Claude Code plugin that encodes a metal-roofing manufacturer's domain knowledge as 7 eval-scored skills — pricing, SKUs, material estimation, color catalog, production, suppliers, and inventory. Built as a real-world case study for Greenfield Metal Sales.",
+  "author": {
+    "name": "Matt Amundson"
+  },
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "claude-code-skills",
+    "domain-expert-system",
+    "metal-building",
+    "pricing",
+    "manufacturing",
+    "erp",
+    "rag-alternative"
+  ],
+  "homepage": "https://github.com/mattamundson/gms-intelligence-plugin"
+}

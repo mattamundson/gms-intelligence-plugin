@@ -1,0 +1,102 @@
+{
+  "skill_name": "gms-sku-decoder",
+  "skill_path": "/sessions/practical-brave-lamport/mnt/personal_agent/.claude/skills/gms-sku-decoder/",
+  "evals": [
+    {
+      "id": "eval-1-decode-tricky-pids",
+      "name": "Decode Tricky PIDs",
+      "description": "Tests decoding of PIDs that have embedded numbers in family prefixes, CMG colors, premium finishes, and edge cases that trip up naive parsers.",
+      "prompt": "Decode these GMS product IDs and tell me what each one is. For each, tell me the product family, gauge, color, finish type, and whether it's a trim, panel, or raw material:\n\n1. CRD8109BK10\n2. CO4129ARW\n3. CRRC109ARW10\n4. SSQ6754CMGAC\n5. PCF9MCC10\n6. PCF9CRBK10\n7. A9AG",
+      "assertions": [
+        {
+          "text": "Correctly identifies CRD810 as Crown Drip 8x10 (not CRD81 + gauge 0)",
+          "type": "critical-correctness"
+        },
+        {
+          "text": "Correctly identifies CO4129ARW as a 41-inch coil, 29ga, Arctic White (not a product starting with CO4)",
+          "type": "critical-correctness"
+        },
+        {
+          "text": "Correctly identifies CRRC10 as Crown Ridge Cap 10in (not CRRC + gauge 1)",
+          "type": "critical-correctness"
+        },
+        {
+          "text": "Correctly identifies SSQ675 as Standing Seam 675 Panel with 24ga (gauge digit 4) and CMGAC as CMG Aged Copper (standard finish, NOT crinkle)",
+          "type": "critical-correctness"
+        },
+        {
+          "text": "Correctly identifies MCC as a matte finish (+8%) not crinkle (+15%)",
+          "type": "critical-correctness"
+        },
+        {
+          "text": "Correctly identifies CRBK as Crinkle Black (+15%) — a CR-prefix crinkle code",
+          "type": "critical-correctness"
+        },
+        {
+          "text": "Correctly identifies A9AG as Ag Panel 29ga, Ash Gray with gauge embedded in the family name (no separate gauge digit)",
+          "type": "correctness"
+        }
+      ]
+    },
+    {
+      "id": "eval-2-encode-from-description",
+      "name": "Encode Products from Description",
+      "description": "Tests the reverse direction: generating valid PIDs from English product descriptions.",
+      "prompt": "Generate GMS product IDs (PIDs) for each of these products:\n\n1. Drip Edge, 26 gauge, Ash Gray, 12 feet\n2. Ridge Cap 10 inch, 29 gauge, Arctic White, 10 feet\n3. Pro Panel, 29 gauge, Black\n4. Pitch Change Flashing, 26ga, Matte Black, 14 foot\n5. Standing Seam 675 Panel, 24ga, CMG Charcoal",
+      "assertions": [
+        {
+          "text": "Drip Edge encodes to DE6AG12 (family=DE, gauge=6, color=AG, length=12)",
+          "type": "critical-correctness"
+        },
+        {
+          "text": "Ridge Cap 10 inch encodes with RC10 family prefix (not just RC)",
+          "type": "correctness"
+        },
+        {
+          "text": "Pro Panel has NO length code (panels don't have length)",
+          "type": "correctness"
+        },
+        {
+          "text": "Matte Black maps to color code MBB (not BK or BKM)",
+          "type": "correctness"
+        },
+        {
+          "text": "24ga CMG product is correctly encoded (gauge digit 4 + CMG color code)",
+          "type": "correctness"
+        }
+      ]
+    },
+    {
+      "id": "eval-3-material-source-and-categories",
+      "name": "Material Sourcing & Product Categories",
+      "description": "Tests knowledge of material source mapping (which coils feed which trims), pattern A vs B, and product categorization with margin targets.",
+      "prompt": "For these GMS products, tell me: (a) what coil or flatsheet each product is made from, (b) whether it uses 20-inch or 41-inch material, (c) the product category, and (d) the target margin:\n\n1. RC209ARW10 (Ridge Cap 20 inch, 29ga, Arctic White, 10ft)\n2. HFRG6AG12 (HF Ridge Gap, 26ga, Ash Gray, 12ft)\n3. PCF9BK10 (Pitch Change Flashing, 29ga, Black, 10ft)\n4. SSQ5506CG (Standing Seam 550, 26ga, Charcoal Gray)\n5. PRO9ARW (Pro Panel, 29ga, Arctic White)\n\nAlso explain: Why does RC20 use 41-inch material while PCF uses 20-inch material?",
+      "assertions": [
+        {
+          "text": "RC20 is correctly identified as Pattern B (41-inch material), sourced from CO4129ARW",
+          "type": "critical-correctness"
+        },
+        {
+          "text": "HFRG uses 43-inch material (special case), sourced from CO4326AG",
+          "type": "critical-correctness"
+        },
+        {
+          "text": "PCF uses Pattern A (20-inch material), sourced from CO2029BK",
+          "type": "correctness"
+        },
+        {
+          "text": "SSQ550 is categorized as Hidden Fastener Panel with 40% target margin",
+          "type": "correctness"
+        },
+        {
+          "text": "PRO is categorized as Exposed Fastener Panel with 35% target margin",
+          "type": "correctness"
+        },
+        {
+          "text": "Explains that RC20 needs wider material because the 20-inch ridge cap has a larger stretchout than standard trims",
+          "type": "depth"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMS Material Estimator — Eval Review</title>
+<style>
+  :root {
+    --forest: #1B4D3E;
+    --gold: #C8A96E;
+    --bg: #FAF8F5;
+    --card: #FFFFFF;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --pass: #059669;
+    --fail: #dc2626;
+    --critical: #7c3aed;
+    --border: #e5e7eb;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .header { background: var(--forest); color: white; padding: 2rem 2rem 1.5rem; }
+  .header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .header p { color: var(--gold); font-size: 0.95rem; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  .scorecard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+  .score-box { background: var(--card); border-radius: 12px; padding: 1.5rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+  .score-box .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.5rem; }
+  .score-box .value { font-size: 2.5rem; font-weight: 800; }
+  .score-box.with .value { color: var(--pass); }
+  .score-box.without .value { color: var(--fail); }
+  .score-box.delta .value { color: var(--forest); }
+  .score-box .sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+  .eval-section { margin-bottom: 2.5rem; }
+  .eval-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--forest); }
+  .eval-header h2 { font-size: 1.2rem; color: var(--forest); }
+  .eval-scores { display: flex; gap: 1rem; font-size: 0.9rem; font-weight: 600; }
+  .eval-scores .with-score { color: var(--pass); }
+  .eval-scores .without-score { color: var(--fail); }
+  .prompt-box { background: #f3f4f6; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 0.9rem; border-left: 4px solid var(--gold); }
+  .prompt-box strong { color: var(--forest); }
+  .comparison-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .comparison-table th { background: var(--forest); color: white; padding: 0.75rem 1rem; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .comparison-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: top; }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+  .badge.pass { background: #d1fae5; color: var(--pass); }
+  .badge.fail { background: #fee2e2; color: var(--fail); }
+  .badge.critical { background: #ede9fe; color: var(--critical); font-size: 0.65rem; margin-left: 0.35rem; }
+  .evidence { color: var(--muted); font-size: 0.8rem; margin-top: 0.35rem; line-height: 1.4; }
+  .footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="max-width:1100px;margin:0 auto;">
+    <h1>GMS Material Estimator — Eval Review</h1>
+    <p>Skill 5 of 6 &bull; Iteration 1 &bull; 2026-03-28 &bull; 21 assertions across 3 evals</p>
+  </div>
+</div>
+<div class="container">
+
+<div class="scorecard">
+  <div class="score-box with">
+    <div class="label">With Skill</div>
+    <div class="value">100%</div>
+    <div class="sub">21 / 21 assertions passed</div>
+  </div>
+  <div class="score-box without">
+    <div class="label">Without Skill (Baseline)</div>
+    <div class="value">19%</div>
+    <div class="sub">4 / 21 assertions passed</div>
+  </div>
+  <div class="score-box delta">
+    <div class="label">Delta</div>
+    <div class="value">+81%</div>
+    <div class="sub">17 additional assertions passed</div>
+  </div>
+</div>
+
+<!-- Eval 1 -->
+<div class="eval-section">
+  <div class="eval-header">
+    <h2>Eval 1: Quick Estimate — Pole Barn</h2>
+    <div class="eval-scores">
+      <span class="with-score">With: 8/8</span>
+      <span class="without-score">Without: 2/8</span>
+    </div>
+  </div>
+  <div class="prompt-box">
+    <strong>Prompt:</strong> I need a quick material estimate for a pole barn. 40 feet wide, 60 feet long, 14-foot eave height, 4:12 roof pitch. Classic Rib 29ga in Arctic White. Full metal walls on all sides. One 12x14 overhead door and one 3x7 walk door. Give me panel counts, trim, and fasteners.
+  </div>
+  <table class="comparison-table">
+    <thead><tr><th style="width:35%">Assertion</th><th style="width:5%">Type</th><th style="width:30%">With Skill</th><th style="width:30%">Without Skill</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Correctly calculates roof area using 4:12 pitch multiplier (~1.05)<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">2,400 sq ft footprint x 1.05 x 2 sides = 5,040 sq ft</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Gets 2,820 sq ft using incorrect methodology — doesn't use 1.05 multiplier</div></td>
+      </tr>
+      <tr>
+        <td>Panel count uses 36" (3') coverage width, rounds UP<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">ceil(60 / 3) = 20 panels/side, 40 total roof panels</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Calculates 2,820 / (3 x 60) = 16 panels — wrong method, massive undercount</div></td>
+      </tr>
+      <tr>
+        <td>Includes ridge cap, eave trim, rake trim, drip edge, corner trim, and J-channel</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">All 6 types plus Peak Cap and Rat Guard — 80 total pieces</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Only ridge cap, eave/closure, corners. Missing rake, drip edge, J-channel</div></td>
+      </tr>
+      <tr>
+        <td>Subtracts door openings from wall panel counts</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">Front: 20 - 4 = 16 panels. Side: 14 - 1 = 13 panels</div></td>
+        <td><span class="badge pass">PASS</span><div class="evidence">Subtracts 168 sq ft for overhead, 21 sq ft for walk door</div></td>
+      </tr>
+      <tr>
+        <td>Includes 5% waste on panels and 10% waste on trim<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">Panels: 40 x 1.05 = 42. Trim: 80 x 1.10 = 88 pieces</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Mentions "typically 5-10%" but never applies to actual counts</div></td>
+      </tr>
+      <tr>
+        <td>Fastener count uses ~80 screws/100 sq ft, rounds to boxes of 250</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">5,040 x 0.80 = 4,032 screws, ceil(4,032 / 250) = 17 boxes</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">"3,500 screws" with no per-sq-ft calc, no box count</div></td>
+      </tr>
+      <tr>
+        <td>Lists all assumptions explicitly</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">Full ASSUMPTIONS section: gable roof, 12" overhang, exposed fastener, waste factors, supply-only</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">No explicit assumptions section — scattered notes only</div></td>
+      </tr>
+      <tr>
+        <td>Does NOT include installation labor or framing<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"NO labor, framing, or installation included — GMS supply only"</div></td>
+        <td><span class="badge pass">PASS</span><div class="evidence">No labor or installation mentioned</div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Eval 2 -->
+<div class="eval-section">
+  <div class="eval-header">
+    <h2>Eval 2: Detailed Estimate — Residential Re-Roof</h2>
+    <div class="eval-scores">
+      <span class="with-score">With: 7/7</span>
+      <span class="without-score">Without: 0/7</span>
+    </div>
+  </div>
+  <div class="prompt-box">
+    <strong>Prompt:</strong> I need a detailed material takeoff for a residential re-roof. The house is 30 feet wide by 50 feet long, 6:12 gable roof pitch, 12-inch overhangs on all sides. The homeowner wants SSQ550 standing seam in 26ga Kynar Slate Gray. There are 3 plumbing vent penetrations. No valleys. Include complete BOM with product codes.
+  </div>
+  <table class="comparison-table">
+    <thead><tr><th style="width:35%">Assertion</th><th style="width:5%">Type</th><th style="width:30%">With Skill</th><th style="width:30%">Without Skill</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Uses SSQ550 coverage width (16" not 36")<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"SSQ550 has 16" coverage width (standing seam, not exposed fastener)"</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Refused entirely — "I cannot provide an accurate material takeoff without access to your company's specific product data"</div></td>
+      </tr>
+      <tr>
+        <td>Applies 6:12 pitch multiplier (~1.12)<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">1,500 x 1.12 x 2 sides = 3,360 sq ft</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">No calculation provided — full refusal</div></td>
+      </tr>
+      <tr>
+        <td>Calculates rafter length including 12" overhang using Pythagorean theorem</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">sqrt(15^2 + 7.5^2) + 1' = 16.77' + 1' = 17.77'</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Says "the calculation is straightforward" but doesn't do it</div></td>
+      </tr>
+      <tr>
+        <td>Includes 3 pipe boots for the plumbing vents</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">3x Pipe Boot, 26ga, Kynar Slate Gray with product code PB26CMGSG</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">No material items listed at all</div></td>
+      </tr>
+      <tr>
+        <td>Product codes use CMG color format (CMGSG for Slate Gray)</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">SSQ5506CMGSG, RC1026CMGSG10, RK26CMGSG10, DE26CMGSG10</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">No product codes — mentions "your product codes" generically</div></td>
+      </tr>
+      <tr>
+        <td>Includes standing seam clips instead of exposed fastener screws</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">126x Standing Seam Clips, 24" OC — "no exposed roof screws"</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">No fastener specification of any kind</div></td>
+      </tr>
+      <tr>
+        <td>Mentions supply-only — homeowner needs installer</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"GMS supply-only: No framing, labor, or installation included"</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Suggests querying JARVIS agents and Paradigm ERP instead</div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Eval 3 -->
+<div class="eval-section">
+  <div class="eval-header">
+    <h2>Eval 3: Quick vs Detailed Mode Awareness</h2>
+    <div class="eval-scores">
+      <span class="with-score">With: 6/6</span>
+      <span class="without-score">Without: 2/6</span>
+    </div>
+  </div>
+  <div class="prompt-box">
+    <strong>Prompt:</strong> A contractor calls and says 'I need to know roughly how much metal I need for a 30x40 garage with a 4:12 pitch. Classic Rib, 29ga, Charcoal. Full walls, one 16x8 overhead door.' Give me a quick estimate, then tell me what additional information you'd need for a detailed engineering-grade takeoff.
+  </div>
+  <table class="comparison-table">
+    <thead><tr><th style="width:35%">Assertion</th><th style="width:5%">Type</th><th style="width:30%">With Skill</th><th style="width:30%">Without Skill</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Provides quick estimate FIRST, not questions<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">Starts with "QUICK ESTIMATE — 30x40 Garage" with full numbers</div></td>
+        <td><span class="badge pass">PASS</span><div class="evidence">Provides estimate first under "Quick Estimate" heading</div></td>
+      </tr>
+      <tr>
+        <td>Quick estimate includes panel counts, trim list, and fastener boxes</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">28 roof panels, 74 wall. Trim: RC10(4), EVE(8), RK(7), DE(14), OC(4), JCH(4). Fasteners: 5+2 boxes</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Gives LF of coil (2,450 LF) not panel counts. Trim is "100-150 LF" vague. No boxes</div></td>
+      </tr>
+      <tr>
+        <td>Lists detailed-mode questions: overhang, windows, penetrations, wainscot, soffit/fascia</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">10 specific questions including wainscot, soffit & fascia, penetrations, overhang, gauge, color</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Asks about coil width, stretchout, panel orientation — irrelevant. Missing wainscot, soffit/fascia</div></td>
+      </tr>
+      <tr>
+        <td>Uses correct panel coverage (36" for Classic Rib)<span class="badge critical">CRITICAL</span></td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">ceil(40' / 3') = 14 panels per side for roof. Walls also use 3' coverage</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">Calculates in LF and sq ft, mentions "2-3 full coils" — not panel counts at 36" coverage</div></td>
+      </tr>
+      <tr>
+        <td>Subtracts 16x8 door opening from wall panels</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"Subtract 1 run for 16x8 overhead door: 18 panels front/back"</div></td>
+        <td><span class="badge pass">PASS</span><div class="evidence">"Less overhead door: 16' x 8' = 128 sq ft" subtracted from wall area</div></td>
+      </tr>
+      <tr>
+        <td>Includes waste factors in the quick estimate</td>
+        <td><span class="badge pass">PASS</span></td>
+        <td><div class="evidence">"WASTE INCLUDED: Panels: +5% built in, Trim: +10% built in"</div></td>
+        <td><span class="badge fail">FAIL</span><div class="evidence">No waste factors applied to any numbers</div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<div class="footer">
+  GMS Material Estimator &bull; Skill 5 of 6 &bull; Built with skill-creator &bull; Greenfield Metal Sales &bull; 2026
+</div>
+</body>
+</html>

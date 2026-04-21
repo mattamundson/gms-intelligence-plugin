@@ -1,0 +1,48 @@
+{
+  "skill_name": "gms-production-nav",
+  "evals": [
+    {
+      "id": "eval-1-assembly-calculation",
+      "name": "Assembly Cost Calculation with Traceability",
+      "prompt": "Calculate the full assembly breakdown for a 12-foot Eave Trim in 26 gauge Ash Gray. Show the 4-component assembly formula, trace it to its parent coil, calculate material cost (assume coil price $2.67/LF), and calculate total production cost including labor. What coil ID does this product consume?",
+      "assertions": [
+        {"text": "Uses actual length 12.25 ft (NOT nominal 12 ft) because GMS adds 0.25 ft for overlap", "type": "critical-correctness"},
+        {"text": "Identifies the parent coil as CO4326AG — 43\" width for 26ga (NOT 41\"), gauge digit 6 = 26 gauge", "type": "critical-correctness"},
+        {"text": "SLIT component: 12.25 LF", "type": "correctness"},
+        {"text": "BEND component uses eave trim's 3 bends: 3 × 12.25 = 36.75 LF at $0.50/LF = $18.38", "type": "critical-correctness"},
+        {"text": "HEM component uses eave trim's 1 hem: 1 × 12.25 = 12.25 LF at $1.00/LF = $12.25", "type": "correctness"},
+        {"text": "Coil consumption: (9.0 ÷ 12) × 12.25 = 9.19 SF using eave trim stretchout of 9.0 inches", "type": "correctness"},
+        {"text": "Material cost: ($2.67 × 12.25) ÷ (43 ÷ 9.0) ≈ $6.85 — uses 43\" width (26ga), not 41\"", "type": "critical-correctness"},
+        {"text": "Total labor ($18.38 + $12.25 = $30.63) dominates total cost — labor is 76-85% of trim cost", "type": "correctness"}
+      ]
+    },
+    {
+      "id": "eval-2-fs-co-migration",
+      "name": "FS→CO Migration and Data Quality",
+      "prompt": "I'm looking at product JC4224BL10 in Paradigm and its assembly references FS4124BL as the material component. Is this correct? What should it be? Also, its stretchout shows 3.08 inches. Walk me through both issues and what the correct assembly record should look like.",
+      "assertions": [
+        {"text": "Flags FS4124BL as INCORRECT — flatsheets should NEVER appear in assembly records, only coils (CO)", "type": "critical-correctness"},
+        {"text": "Corrects to CO4124BL — extracts gauge digit 4 = 24ga, maps to 41\" width coil, color BL", "type": "critical-correctness"},
+        {"text": "Flags 3.08\" stretchout as a known data quality error — default placeholder in ~12,000 products", "type": "critical-correctness"},
+        {"text": "States correct stretchout for J Channel: 5.0 inches (not 3.08\")", "type": "critical-correctness"},
+        {"text": "Explains the FS→CO migration scope: 5,673 products affected", "type": "correctness"},
+        {"text": "Notes migration is blocked pending Paradigm support — API down since 2026-03-14", "type": "correctness"},
+        {"text": "Shows correct 4-component assembly: SLIT 10.25 LF, BEND 2×10.25=20.50 LF, HEM 0×10.25=0 LF, COIL (5.0÷12)×10.25=4.27 SF", "type": "correctness"}
+      ]
+    },
+    {
+      "id": "eval-3-production-feasibility",
+      "name": "Order Feasibility and Cost Analysis",
+      "prompt": "A contractor wants 50 pieces of 10-foot Drip Edge in 29ga Arctic White and 25 pieces of 10-foot Sidewall Flashing in 29ga Arctic White. Both use coil CO4129ARW. We have 800 LF of CO4129ARW in stock. Can we build this order? What's the total production cost and what should we price it at?",
+      "assertions": [
+        {"text": "Drip Edge: stretchout 5.0\", so units per coil width = 41÷5 = 8.2 → 8 per width. Coil LF needed: 50 × 10.25 ÷ 8 ≈ 64.1 LF", "type": "critical-correctness"},
+        {"text": "Sidewall: stretchout 9.0\", so units per coil width = 41÷9 = 4.56 → 4 per width. Coil LF needed: 25 × 10.25 ÷ 4 ≈ 64.1 LF", "type": "critical-correctness"},
+        {"text": "Total coil needed: ~128 LF (plus 5% waste = ~134 LF) well within 800 LF in stock — order IS feasible", "type": "critical-correctness"},
+        {"text": "Drip Edge labor per piece: BEND 2×10.25×$0.50 + HEM 1×10.25×$1.00 = $10.25 + $10.25 = $20.50", "type": "correctness"},
+        {"text": "Sidewall labor per piece: BEND 2×10.25×$0.50 + HEM 0×10.25×$1.00 = $10.25 + $0 = $10.25", "type": "correctness"},
+        {"text": "Prices at 50% target margin for trim: Price = Cost ÷ (1 - 0.50)", "type": "correctness"},
+        {"text": "Uses actual length 10.25 ft (not 10 ft) throughout all calculations", "type": "correctness"}
+      ]
+    }
+  ]
+}

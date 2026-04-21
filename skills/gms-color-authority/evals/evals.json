@@ -1,0 +1,48 @@
+{
+  "skill_name": "gms-color-authority",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "eval-1-color-routing-identification",
+      "title": "Contractor Color Request Routing",
+      "prompt": "A contractor calls and says: 'I need 200 linear feet of Classic Rib in that dark gray crinkle, 29 gauge. And I also need 100 LF of SSQ675 standing seam in charcoal gray — the good paint, not the cheap stuff.' Route each request to the correct supplier, identify exact color names and codes, flag any premium pricing, and note availability.",
+      "assertions": [
+        {"text": "Dark gray crinkle = Crinkle Charcoal Gray (CCH), USS/SMP", "type": "critical-correctness"},
+        {"text": "29ga crinkle is stock at 40.875\" width from USS", "type": "correctness"},
+        {"text": "Crinkle carries +15% premium markup on entire product price", "type": "critical-correctness"},
+        {"text": "Coil-level crinkle surcharge: +$0.18/LF on 29ga", "type": "correctness"},
+        {"text": "SSQ675 'the good paint' = Kynar/PVDF, routed to CMG", "type": "critical-correctness"},
+        {"text": "Kynar Charcoal Gray exists in CMG catalog, stock in both 40\" and 48\" widths", "type": "correctness"},
+        {"text": "Kynar lead time 4-6 weeks vs SMP 2-3 weeks — flag the difference", "type": "correctness"}
+      ]
+    },
+    {
+      "id": "eval-2-premium-finish-pricing-impact",
+      "title": "Premium Finish Cost Calculation",
+      "prompt": "Customer wants a quote comparison: 100 LF of Eave Trim in 26ga standard Black (BK) vs 26ga Matte Black (MBK) vs 26ga Crinkle Black (CBK). Walk me through the material cost difference at the coil level for each, explain the premium finish markup, and clarify the difference between Matte Black the color and MCC the finish type.",
+      "assertions": [
+        {"text": "Standard Black (BK) = no coil surcharge, no premium markup — base pricing", "type": "critical-correctness"},
+        {"text": "Matte Black (MBK) = premium finish, +15% markup on entire product price", "type": "critical-correctness"},
+        {"text": "Crinkle Black (CBK) = crinkle premium, +15% markup on entire product price", "type": "critical-correctness"},
+        {"text": "Crinkle coil surcharge on 26ga = +$0.23/LF additive to base coil cost", "type": "correctness"},
+        {"text": "Explains Matte Black (MBK) is a specific color vs MCC is a finish type applicable to multiple colors", "type": "critical-correctness"},
+        {"text": "All three are USS/SMP supplier, 26ga = 43\" width coil", "type": "correctness"},
+        {"text": "Black (BK) and Matte Black (MBK) both stock in 26ga; CBK may be PTO in 26ga", "type": "correctness"}
+      ]
+    },
+    {
+      "id": "eval-3-cross-system-color-confusion",
+      "title": "SMP vs Kynar Same-Name Color Resolution",
+      "prompt": "New customer says: 'I need Burnished Slate panels and trim for a commercial building. The architect wants 40-year paint warranty. Also quote me Ash Gray as an alternative. What are my options and what's the cost difference between the regular and premium versions?'",
+      "assertions": [
+        {"text": "40-year warranty = Kynar/PVDF from CMG, not SMP", "type": "critical-correctness"},
+        {"text": "Burnished Slate exists in BOTH SMP and Kynar — warns about cross-system confusion", "type": "critical-correctness"},
+        {"text": "Ash Gray also exists in BOTH SMP and Kynar — same warning", "type": "critical-correctness"},
+        {"text": "Kynar base cost ~65-69% higher than SMP equivalent", "type": "correctness"},
+        {"text": "Kynar = 24ga or 26ga only (no 29ga available)", "type": "correctness"},
+        {"text": "Kynar lead time 4-6 weeks vs SMP 2-3 weeks", "type": "correctness"},
+        {"text": "Recommends confirming Kynar for the architect spec since 40-year warranty required", "type": "correctness"}
+      ]
+    }
+  ]
+}

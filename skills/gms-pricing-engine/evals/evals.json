@@ -1,0 +1,22 @@
+{
+  "skill_name": "gms-pricing-engine",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to price out a full family of 10\" Ridge Caps. The base 29ga/10' standard color is $32.00. Give me every variant — all three gauges (29, 26, 24), all five lengths (10', 12', 14', 16', 18'), and include Matte and Crinkle premiums for each. Output as a table I can review. Also tell me what the sell prices should be if my cost on the 29ga/10' standard is $16.00 and I want 50% margin on trim.",
+      "expected_output": "A comprehensive pricing table with 90 variants (3 gauges × 5 lengths × 3 finishes × 2 pricing methods), correct multiplier math, and margin analysis. Base price calculations should match: e.g., 26ga/12'/Crinkle = $32 × 1.2 × 1.2 × 1.15 = $52.99. Cost-based pricing should show $16 ÷ 0.50 = $32.00 sell for 29ga/10'/standard.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I just got a price increase from USS on 29ga coils — they're going from $2.22/LF to $2.45/LF. That's a 10.4% increase. What happens to my margins on trim if I keep current sell prices? My current base sell price for a standard 10\" Drip Edge (29ga/10'/standard) is $24.50 and the old cost was $12.25. Show me the margin impact and what I'd need to raise prices to in order to maintain 50% margin. Do the same analysis for 26ga and 24ga variants.",
+      "expected_output": "What-if analysis showing: old cost $12.25, new cost = $12.25 × 1.104 ≈ $13.53 (proportional increase), old margin at $24.50 sell = 50%, new margin at same $24.50 = 44.8% (below target). New sell prices needed: $13.53 ÷ 0.50 = $27.06. Same logic applied across gauge variants with their multipliers.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Can you validate the pricing on these products and tell me if anything looks off? Here's what I have in Paradigm right now:\n\nPCF9ARW10 = $28.50\nPCF6ARW10 = $34.20\nPCF4ARW10 = $41.04\nPCF9ARW12 = $34.20\nPCF6ARW12 = $41.04\nPCF9MCC10 = $32.78\nPCF9CRBK10 = $32.78\nPCF6MCC10 = $39.33\nCRD8109ARW10 = $28.50\nCRRC109ARW10 = $33.00",
+      "expected_output": "Validation report that catches: (1) PCF9MCC10 should be $28.50 × 1.08 = $30.78, not $32.78 — the old +15% rate was applied instead of the correct +8% Matte rate. (2) PCF9CRBK10 at $32.78 is correct ($28.50 × 1.15 = $32.775). (3) CRD8109ARW10 should NOT have premium markup — CRD is a profile prefix, not a finish. (4) CRRC109ARW10 has no relationship to PCF family, so cross-family comparison isn't applicable. All gauge/length relationships within the PCF family should validate correctly."
+    }
+  ]
+}

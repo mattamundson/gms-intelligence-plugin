@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMS SKU Decoder — Eval Review</title>
+<style>
+  :root { --green: #22c55e; --red: #ef4444; --amber: #f59e0b; --bg: #0f172a; --card: #1e293b; --border: #334155; --text: #e2e8f0; --muted: #94a3b8; --accent: #3b82f6; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 2rem; max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+  .hero { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+  .hero-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; }
+  .hero-card .number { font-size: 3rem; font-weight: 800; line-height: 1; }
+  .hero-card .label { color: var(--muted); font-size: 0.85rem; margin-top: 0.5rem; }
+  .hero-card.green .number { color: var(--green); }
+  .hero-card.red .number { color: var(--red); }
+  .hero-card.blue .number { color: var(--accent); }
+  .eval-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1.5rem; overflow: hidden; }
+  .eval-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .eval-header h2 { font-size: 1.1rem; }
+  .eval-header .badge { font-size: 0.8rem; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 600; }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
+  .eval-body { padding: 1.5rem; }
+  .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .column-header { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .column-header .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-green { background: var(--green); }
+  .dot-red { background: var(--red); }
+  .assertion { padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem; border-left: 3px solid transparent; }
+  .assertion.pass { background: rgba(34,197,94,0.08); border-left-color: var(--green); }
+  .assertion.fail { background: rgba(239,68,68,0.08); border-left-color: var(--red); }
+  .assertion .tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 0.5rem; }
+  .tag-pass { color: var(--green); }
+  .tag-fail { color: var(--red); }
+  .assertion .reason { color: var(--muted); font-size: 0.8rem; margin-top: 0.35rem; }
+  .notes { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
+  .notes h3 { font-size: 1rem; margin-bottom: 1rem; }
+  .note { color: var(--muted); font-size: 0.85rem; margin-bottom: 0.75rem; padding-left: 1rem; border-left: 2px solid var(--border); }
+  .score-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); margin-top: 0.75rem; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+  .score-fill.green { background: var(--green); }
+  .score-fill.red { background: var(--red); }
+  @media (max-width: 768px) { .hero { grid-template-columns: 1fr; } .comparison { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<h1>GMS SKU Decoder &mdash; Skill Eval Review</h1>
+<p class="subtitle">Iteration 1 &bull; 2026-03-28 &bull; 3 evals, 18 assertions &bull; Claude Sonnet executor + Claude Opus grader</p>
+
+<div class="hero">
+  <div class="hero-card green">
+    <div class="number">100%</div>
+    <div class="label">With Skill (18/18)</div>
+    <div class="score-bar"><div class="score-fill green" style="width:100%"></div></div>
+  </div>
+  <div class="hero-card red">
+    <div class="number">44%</div>
+    <div class="label">Without Skill (8/18)</div>
+    <div class="score-bar"><div class="score-fill red" style="width:44%"></div></div>
+  </div>
+  <div class="hero-card blue">
+    <div class="number">+56%</div>
+    <div class="label">Skill Improvement</div>
+  </div>
+</div>
+
+<!-- EVAL 1 -->
+<div class="eval-section">
+  <div class="eval-header">
+    <h2>Eval 1: Decode Tricky PIDs</h2>
+    <div>
+      <span class="badge badge-green">With: 7/7</span>
+      <span class="badge badge-red">Without: 2/7</span>
+    </div>
+  </div>
+  <div class="eval-body">
+    <div class="comparison">
+      <div>
+        <div class="column-header"><span class="dot dot-green"></span> With Skill</div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> CRD810 = Crown Drip 8x10 (not CRD81 + gauge 0)<div class="reason">Correctly identifies CRD810 as family prefix with embedded '810'</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> CO4129ARW = 41" coil, 29ga, Arctic White<div class="reason">Decodes: CO=coil, 41=width, 29=gauge, ARW=Arctic White</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> CRRC10 = Crown Ridge Cap 10in<div class="reason">Identifies CRRC10 as family prefix, not CRRC + gauge 1</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> SSQ675 24ga, CMGAC = standard finish (NOT crinkle)<div class="reason">CMGAC = CMG Aged Copper, standard (1.00x). C is part of code, not crinkle suffix.</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> MCC = matte finish (+8%), not crinkle (+15%)<div class="reason">States "Matte (1.08x premium)" — correctly distinguishes from crinkle</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> CRBK = Crinkle Black (+15%)<div class="reason">Identifies CR prefix as crinkle with +15% multiplier</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> A9AG = Ag Panel 29ga (gauge in family name)<div class="reason">Explicitly notes "gauge embedded in family prefix, no separate digit"</div></div>
+      </div>
+      <div>
+        <div class="column-header"><span class="dot dot-red"></span> Without Skill</div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> CRD810 = Crown Drip 8x10<div class="reason">Treats '8109' as style code, misidentifies gauge</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> CO4129ARW = 41" coil, 29ga<div class="reason">Doesn't decode 41" width or 29ga from digits</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> CRRC10 = Crown Ridge Cap 10in<div class="reason">Treats '109' as family code, wrong gauge</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> CMGAC = standard, NOT crinkle<div class="reason">Uncertain on gauge, doesn't confirm non-crinkle</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> MCC = matte (+8%)<div class="reason">Says MCC = +15% premium. WRONG — MCC is matte (+8%)</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> CRBK = Crinkle (+15%)<div class="reason">Correctly identifies CR as crinkle prefix</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> A9AG = gauge in family name<div class="reason">Says "Gauge: Not encoded in ID" — misses A9 = 29ga</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EVAL 2 -->
+<div class="eval-section">
+  <div class="eval-header">
+    <h2>Eval 2: Encode Products from Description</h2>
+    <div>
+      <span class="badge badge-green">With: 5/5</span>
+      <span class="badge badge-red">Without: 3/5</span>
+    </div>
+  </div>
+  <div class="eval-body">
+    <div class="comparison">
+      <div>
+        <div class="column-header"><span class="dot dot-green"></span> With Skill</div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> Drip Edge &rarr; DE6AG12<div class="reason">Exact match: DE + 6 + AG + 12</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> Ridge Cap 10" uses RC10 family prefix<div class="reason">Generates RC109ARW10, correctly uses RC10 not RC</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> Pro Panel has NO length code<div class="reason">Generates PRO9BK — panels don't have length</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> Matte Black = MBB color code<div class="reason">Correct: MBB (not BK or BKM)</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> 24ga CMG = gauge digit 4 + CMG color<div class="reason">Generates SSQ6754CMCG — valid format</div></div>
+      </div>
+      <div>
+        <div class="column-header"><span class="dot dot-red"></span> Without Skill</div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> Drip Edge &rarr; DE6AG12<div class="reason">Generates DE-26-AG-12FT (hyphens, FT suffix — wrong format)</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> Ridge Cap 10" uses RC10<div class="reason">Format RC10-29-ARW-10FT (hyphens, wrong format)</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> Pro Panel has NO length code<div class="reason">Correctly omits length (though uses PROPAN prefix)</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> Matte Black = MBB<div class="reason">Uses BKM instead of MBB — wrong code order</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> 24ga CMG encoding<div class="reason">Uses SSQ675-24-CMCG (hyphens, '24' not digit '4')</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EVAL 3 -->
+<div class="eval-section">
+  <div class="eval-header">
+    <h2>Eval 3: Material Sourcing &amp; Product Categories</h2>
+    <div>
+      <span class="badge badge-green">With: 6/6</span>
+      <span class="badge badge-red">Without: 3/6</span>
+    </div>
+  </div>
+  <div class="eval-body">
+    <div class="comparison">
+      <div>
+        <div class="column-header"><span class="dot dot-green"></span> With Skill</div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> RC20 = Pattern B (41"), source CO4129ARW<div class="reason">Exact coil PID and pattern identification</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> HFRG = 43" special, source CO4326AG<div class="reason">Correctly identifies the 43" exception for HFRG</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> PCF = Pattern A (20"), source CO2029BK<div class="reason">Standard 20" coil sourcing for trim</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> SSQ550 = Hidden Fastener, 40% margin<div class="reason">Correct category and margin target</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> PRO = Exposed Fastener, 35% margin<div class="reason">Correct: 35% (not 40%)</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> RC20 uses 41" due to stretchout<div class="reason">Explains: RC20 stretchout = 21.0"/ft vs PCF's lower stretchout</div></div>
+      </div>
+      <div>
+        <div class="column-header"><span class="dot dot-red"></span> Without Skill</div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> RC20 = Pattern B, CO4129ARW<div class="reason">Vague: mentions 41" but doesn't name CO4129ARW source</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> HFRG = 43" special, CO4326AG<div class="reason">Says "41-inch material" — misses the 43" special exception</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> PCF = Pattern A (20")<div class="reason">Correctly identifies 20" material</div></div>
+        <div class="assertion pass"><span class="tag tag-pass">PASS</span> SSQ550 = Hidden Fastener, 40%<div class="reason">Correct margin (general panel knowledge)</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> PRO = Exposed Fastener, 35%<div class="reason">Says 40% — wrong, PRO is 35%</div></div>
+        <div class="assertion fail"><span class="tag tag-fail">FAIL</span> RC20 stretchout explanation<div class="reason">General "broader coverage" — misses stretchout metric</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTES -->
+<div class="notes">
+  <h3>Key Findings</h3>
+  <div class="note"><strong>Embedded Numbers:</strong> Without the skill, Claude treats CRD810/CRRC10 embedded numbers as gauge digits. The skill's greedy longest-first matching prevents this.</div>
+  <div class="note"><strong>Coil Format:</strong> CO4129ARW uses 2-digit width (41) + 2-digit gauge (29) + color. Without the skill, Claude can't parse this non-obvious structure.</div>
+  <div class="note"><strong>Matte vs Crinkle:</strong> The CLAUDE.md glossary says "MCC/CR/ULG = premium (+15%)" but MCC is actually matte (+8%). The skill corrects this critical error.</div>
+  <div class="note"><strong>PID Format:</strong> GMS uses no-separator format (DE6AG12). Without skill, Claude defaults to hyphenated format (DE-26-AG-12FT) common in other metal systems.</div>
+  <div class="note"><strong>HFRG Exception:</strong> HFRG is the ONLY family using 43" material. Without the skill, Claude lumps it with standard 41" Pattern B families.</div>
+  <div class="note"><strong>Color Code Order:</strong> Matte Black = MBB (M prefix + BB), not BKM (BK suffix + M). Without the skill, Claude guesses the wrong code construction.</div>
+</div>
+</body>
+</html>

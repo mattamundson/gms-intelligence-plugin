@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMS Production & Assembly Navigator — Eval Review</title>
+<style>
+  :root { --forest: #1B4D3E; --gold: #C8A96E; --bg: #FAF8F5; --card: #FFF; --text: #1a1a1a; --muted: #6b7280; --pass: #059669; --fail: #dc2626; --critical: #7c3aed; --border: #e5e7eb; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .header { background: var(--forest); color: white; padding: 2rem; }
+  .header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; max-width: 1100px; margin: 0 auto 0.25rem; }
+  .header p { color: var(--gold); font-size: 0.95rem; max-width: 1100px; margin: 0 auto; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  .scorecard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+  .score-box { background: var(--card); border-radius: 12px; padding: 1.5rem; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+  .score-box .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.5rem; }
+  .score-box .value { font-size: 2.5rem; font-weight: 800; }
+  .score-box.with .value { color: var(--pass); }
+  .score-box.without .value { color: var(--fail); }
+  .score-box.delta .value { color: var(--forest); }
+  .score-box .sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+  .eval-section { margin-bottom: 2.5rem; }
+  .eval-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--forest); }
+  .eval-header h2 { font-size: 1.15rem; color: var(--forest); }
+  .eval-scores { display: flex; gap: 1rem; font-size: 0.9rem; font-weight: 600; }
+  .ws { color: var(--pass); } .wos { color: var(--fail); }
+  .prompt-box { background: #f3f4f6; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 0.9rem; border-left: 4px solid var(--gold); }
+  .prompt-box strong { color: var(--forest); }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  th { background: var(--forest); color: white; padding: 0.75rem 1rem; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+  .badge.pass { background: #d1fae5; color: var(--pass); }
+  .badge.fail { background: #fee2e2; color: var(--fail); }
+  .badge.critical { background: #ede9fe; color: var(--critical); font-size: 0.65rem; margin-left: 0.35rem; }
+  .ev { color: var(--muted); font-size: 0.8rem; margin-top: 0.35rem; line-height: 1.4; }
+  .footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="header"><h1>GMS Production & Assembly Navigator — Eval Review</h1><p>Skill 8 of 11 &bull; Iteration 1 &bull; 2026-03-28 &bull; 22 assertions across 3 evals</p></div>
+<div class="container">
+<div class="scorecard">
+  <div class="score-box with"><div class="label">With Skill</div><div class="value">91%</div><div class="sub">20 / 22 assertions passed</div></div>
+  <div class="score-box without"><div class="label">Baseline</div><div class="value">0%</div><div class="sub">0 / 22 assertions passed</div></div>
+  <div class="score-box delta"><div class="label">Delta</div><div class="value">+91%</div><div class="sub">20 additional assertions passed</div></div>
+</div>
+
+<div class="eval-section">
+  <div class="eval-header"><h2>Eval 1: Assembly Cost Calculation with Traceability</h2><div class="eval-scores"><span class="ws">With: 8/8</span><span class="wos">Without: 0/8</span></div></div>
+  <div class="prompt-box"><strong>Prompt:</strong> Calculate the full assembly breakdown for a 12-foot Eave Trim in 26 gauge Ash Gray. Show the 4-component assembly formula, trace it to its parent coil, calculate material cost (assume coil price $2.67/LF), and calculate total production cost including labor.</div>
+  <table><thead><tr><th style="width:30%">Assertion</th><th style="width:5%">W</th><th style="width:32%">With Skill</th><th style="width:33%">Without Skill</th></tr></thead><tbody>
+    <tr><td>Uses 12.25 ft (NOT nominal 12 ft)<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"Actual: 12.25 ft (adds 0.25 ft / 3 inches for overlap/waste)"</div></td><td><span class="badge fail">F</span><div class="ev">Refused to answer: "cannot accurately answer without GMS's specific data"</div></td></tr>
+    <tr><td>Parent coil CO4326AG — 43" for 26ga<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"CO4326AG (43" wide, 26 gauge, Ash Gray)" — correct 43" width</div></td><td><span class="badge fail">F</span><div class="ev">Asked "What width coil does Eave Trim consume?" — doesn't know</div></td></tr>
+    <tr><td>SLIT component: 12.25 LF</td><td><span class="badge pass">P</span></td><td><div class="ev">"SLIT: 1 × 12.25 = 12.25 LF"</div></td><td><span class="badge fail">F</span><div class="ev">No calculation attempted</div></td></tr>
+    <tr><td>BEND: 3 × 12.25 = 36.75 LF @ $0.50 = $18.38<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"BEND: 36.75 LF × $0.50/LF = $18.38"</div></td><td><span class="badge fail">F</span><div class="ev">No calculation attempted</div></td></tr>
+    <tr><td>HEM: 1 × 12.25 = 12.25 LF @ $1.00 = $12.25</td><td><span class="badge pass">P</span></td><td><div class="ev">"HEM: 12.25 LF × $1.00/LF = $12.25"</div></td><td><span class="badge fail">F</span><div class="ev">No calculation attempted</div></td></tr>
+    <tr><td>Coil consumption: (9.0 ÷ 12) × 12.25 = 9.19 SF</td><td><span class="badge pass">P</span></td><td><div class="ev">"COIL: (9.0 ÷ 12) × 12.25 = 9.19 SF"</div></td><td><span class="badge fail">F</span><div class="ev">No calculation attempted</div></td></tr>
+    <tr><td>Material cost: ($2.67×12.25)÷(43÷9) ≈ $8.17<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"($2.67 × 12.25) ÷ 4 = $8.17" — uses 43" width correctly</div></td><td><span class="badge fail">F</span><div class="ev">No calculation attempted</div></td></tr>
+    <tr><td>Labor ($30.63) dominates at 76-85%</td><td><span class="badge pass">P</span></td><td><div class="ev">"Labor: 79% ($30.63 / $38.80)"</div></td><td><span class="badge fail">F</span><div class="ev">No calculation attempted</div></td></tr>
+  </tbody></table>
+</div>
+
+<div class="eval-section">
+  <div class="eval-header"><h2>Eval 2: FS→CO Migration and Data Quality</h2><div class="eval-scores"><span class="ws">With: 7/7</span><span class="wos">Without: 0/7</span></div></div>
+  <div class="prompt-box"><strong>Prompt:</strong> Product JC4224BL10 references FS4124BL as material component. Stretchout shows 3.08 inches. Walk through both issues and the correct assembly record.</div>
+  <table><thead><tr><th style="width:30%">Assertion</th><th style="width:5%">W</th><th style="width:32%">With Skill</th><th style="width:33%">Without Skill</th></tr></thead><tbody>
+    <tr><td>Flags FS4124BL as INCORRECT<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"INCORRECT — This is a migration bug" + "FS should NEVER appear in assembly"</div></td><td><span class="badge fail">F</span><div class="ev">Asks "Is FS4124BL a real flatsheet component, or should it be a CO reference?"</div></td></tr>
+    <tr><td>Corrects to CO4124BL (gauge 4=24ga, 41")<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"Correct coil: CO4124BL" with gauge→width extraction table</div></td><td><span class="badge fail">F</span><div class="ev">Did not provide correct coil code</div></td></tr>
+    <tr><td>Flags 3.08" as error in ~12,000 products<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"~12,000 products (across 73 subcategories) still have this exact 3.08" placeholder"</div></td><td><span class="badge fail">F</span><div class="ev">Could not assess — asked for actual coil width</div></td></tr>
+    <tr><td>Correct J Channel stretchout: 5.0"<span class="badge critical">CRIT</span></td><td><span class="badge pass">P</span></td><td><div class="ev">"J Channel should have a stretchout of 5.0 inches, not 3.08"</div></td><td><span class="badge fail">F</span><div class="ev">Did not know J Channel stretchout</div></td></tr>
+    <tr><td>5,673 products affected by FS→CO</td><td><span class="badge pass">P</span></td><td><div class="ev">"5,673 known FS→CO migration issues"</div></td><td><span class="badge fail">F</span><div class="ev">Mentioned 29,508 but not 5,673 count</div></td></tr>
+    <tr><td>Paradigm API down since 2026-03-14</td><td><span class="badge pass">P</span></td><td><div class="ev">"Paradigm API lacks assembly update endpoints" + "Awaiting Paradigm API support"</div></td><td><span class="badge fail">F</span><div class="ev">No mention of API status</div></td></tr>
+    <tr><td>4-component assembly: SLIT 10.25, BEND 20.5, HEM 0, COIL 4.27</td><td><span class="badge pass">P</span></td><td><div class="ev">"SLIT: 10.25, BEND: 2×10.25=20.5, HEM: 0, COIL: (5.0÷12)×10.25=4.27"</div></td><td><span class="badge fail">F</span><div class="ev">No assembly calculation attempted</div></td></tr>
+  </tbody></table>
+</div>
+
+<div class="eval-section">
+  <div class="eval-header"><h2>Eval 3: Order Feasibility and Cost Analysis</h2><div class="eval-scores"><span class="ws">With: 5/7</span><span class="wos">Without: 0/7</span></div></div>
+  <div class="prompt-box"><strong>Prompt:</strong> 50 Drip Edge + 25 Sidewall Flashing (10', 29ga, Arctic White) from CO4129ARW. 800 LF in stock. Can we build? Total cost and price?</div>
+  <table><thead><tr><th style="width:30%">Assertion</th><th style="width:5%">W</th><th style="width:32%">With Skill</th><th style="width:33%">Without Skill</th></tr></thead><tbody>
+    <tr><td>DE: 41÷5=8 per width. ~64.1 LF needed<span class="badge critical">CRIT</span></td><td><span class="badge fail">F</span></td><td><div class="ev">Gets 41÷5=8 units correctly but converts to SF (213.54) instead of LF (64.1)</div></td><td><span class="badge fail">F</span><div class="ev">Refused: "can't reliably answer using only general knowledge"</div></td></tr>
+    <tr><td>SW: 41÷9=4 per width. ~64.1 LF needed<span class="badge critical">CRIT</span></td><td><span class="badge fail">F</span></td><td><div class="ev">Gets 41÷9=4.56→4 correctly but converts to SF (191.72) instead of LF (64.1)</div></td><td><span class="badge fail">F</span><div class="ev">No calculation attempted</div></td></tr>
+    <tr><td>~134 LF total within 800 LF — IS feasible<span class="badge critical">CRIT</span></td><td><span class="badge fail">F</span></td><td><div class="ev">Incorrectly said NOT feasible — converted 800 LF to 228.89 SF instead of comparing LF</div></td><td><span class="badge fail">F</span><div class="ev">Could not determine feasibility</div></td></tr>
+    <tr><td>DE labor: $10.25 + $10.25 = $20.50</td><td><span class="badge pass">P</span></td><td><div class="ev">"BEND: 2×10.25×$0.50=$10.25, HEM: 1×10.25×$1.00=$10.25, Total: $20.50"</div></td><td><span class="badge fail">F</span><div class="ev">No labor calculation attempted</div></td></tr>
+    <tr><td>SW labor: $10.25 + $0 = $10.25</td><td><span class="badge pass">P</span></td><td><div class="ev">"BEND: 2×10.25×$0.50=$10.25, HEM: 0, Total: $10.25"</div></td><td><span class="badge fail">F</span><div class="ev">No labor calculation attempted</div></td></tr>
+    <tr><td>Prices at 50% margin: Cost ÷ (1 - 0.50)</td><td><span class="badge pass">P</span></td><td><div class="ev">"Pricing at 50% Margin: Cost ÷ 0.50"</div></td><td><span class="badge fail">F</span><div class="ev">Mentioned 50% from memory but no pricing calc</div></td></tr>
+    <tr><td>Uses 10.25 ft throughout</td><td><span class="badge pass">P</span></td><td><div class="ev">Consistently uses 10.25 ft for all calculations</div></td><td><span class="badge fail">F</span><div class="ev">Did not know about 0.25 ft addition</div></td></tr>
+  </tbody></table>
+</div>
+</div>
+<div class="footer">GMS Production & Assembly Navigator &bull; Skill 8 of 11 &bull; Greenfield Metal Sales &bull; 2026</div>
+</body>
+</html>
