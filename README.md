@@ -1,5 +1,10 @@
 # gms-intelligence-plugin
 
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![claude code](https://img.shields.io/badge/claude%20code-plugin-orange.svg)](https://claude.com/claude-code)
+[![skills](https://img.shields.io/badge/skills-7-brightgreen.svg)](./skills)
+[![evals](https://img.shields.io/badge/eval%20pass%20rate-83%25-brightgreen.svg)](./evals)
+
 > A Claude Code plugin that encodes a metal-roofing manufacturer's domain knowledge as 7 eval-scored skills. Built as a real-world case study for Greenfield Metal Sales — also serves as a reusable template for building domain-expert Claude Code plugins in other verticals.
 
 ## What this is
