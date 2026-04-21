@@ -47,7 +47,17 @@ Every skill was evaluated by spinning up two Claude instances:
 
 This catches regressions that human eyeballing misses. When I tightened the gauge multiplier from +20%-per-step to an exact table, the eval grader caught three places in the skill where the old formula still appeared in reference docs — I'd never have found those by reading.
 
-The full eval-review HTMLs ship in `/evals/`. Open them in a browser to see every prompt, the with-skill output, the baseline (no-skill) output, and the assertion-by-assertion grading.
+The full eval-review HTMLs ship in `/evals/` and render live via GitHub Pages:
+
+- [gms-pricing-engine](https://mattamundson.github.io/gms-intelligence-plugin/evals/gms-pricing-engine-eval-review.html) — **30/36 passed (83%)**
+- [gms-sku-decoder](https://mattamundson.github.io/gms-intelligence-plugin/evals/gms-sku-decoder-eval-review.html)
+- [gms-material-estimator](https://mattamundson.github.io/gms-intelligence-plugin/evals/gms-material-estimator-eval-review.html)
+- [gms-color-authority](https://mattamundson.github.io/gms-intelligence-plugin/evals/gms-color-authority-eval-review.html)
+- [gms-production-nav](https://mattamundson.github.io/gms-intelligence-plugin/evals/gms-production-nav-eval-review.html)
+- [gms-supplier-intel](https://mattamundson.github.io/gms-intelligence-plugin/evals/gms-supplier-intel-eval-review.html)
+- [gms-inventory-health](https://mattamundson.github.io/gms-intelligence-plugin/evals/gms-inventory-health-eval-review.html)
+
+Each report shows every prompt, the with-skill output, the baseline (no-skill) output, and the assertion-by-assertion grading.
 
 **One concrete number worth knowing:** the pricing-engine eval (3 evals, 36 total assertions) passes **30/36 = 83%** — the 6 misses are edge cases around Pattern B material pricing that I've documented as known-limitations in the skill's `common-mistakes` section.
 
