@@ -7,6 +7,10 @@
 
 > A Claude Code plugin that encodes a metal-roofing manufacturer's domain knowledge as 7 eval-scored skills. Built as a real-world case study for Greenfield Metal Sales — also serves as a reusable template for building domain-expert Claude Code plugins in other verticals.
 
+[![Live eval report — gms-pricing-engine](./docs/hero-eval-preview.png)](https://mattamundson.github.io/gms-intelligence-plugin/evals/gms-pricing-engine-eval-review.html)
+
+*↑ A live eval review page. Click through for the full Sonnet-executor / Opus-grader breakdown of every prompt, every assertion, for all 7 skills.*
+
 ## What this is
 
 Most "put Claude in a business" experiments end up as a RAG pipeline indexing random documentation. This plugin takes the opposite approach: **structured, progressive-disclosure skills** where each skill encodes one domain (pricing formulas, SKU structure, material sourcing, color catalogs, production workflow, supplier intelligence, inventory health) in markdown + Python.
